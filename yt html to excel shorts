@@ -1,0 +1,26 @@
+#this code finds all shorts in the html using a regex, extracted data is the url and title (expect more data collected in future)
+
+def find_shorts_links_and_titles(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    pattern = r'href="(/shorts/[^"]+)"[^>]*title="([^"]*)"'
+
+    matches = re.findall(pattern, content)
+
+    data = []
+    for link, title in matches:
+        full_link = f'https://www.youtube.com{link}'
+        data.append((full_link, title))
+
+    df = pd.DataFrame(data, columns=['URL', 'Title'])
+
+    # Save the DataFrame to an Excel file in the same directory as the input file
+    excel_path = os.path.join(os.path.dirname(file_path), 'hallmark.xlsx')   ### adjust the output excel with the urls here
+    df.to_excel(excel_path, index=False)
+
+    print(f"Saved {len(df)} unique '/shorts/' links and titles to '{excel_path}'")
+
+# Replace 'your_file_path.txt' with the actual path to your text file
+file_path = '/Users/p/Desktop.../x.txt'  ### input text file path from youtube
+find_shorts_links_and_titles(file_path)
