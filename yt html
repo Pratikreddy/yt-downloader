@@ -1,0 +1,23 @@
+# This code is to save the html page contents of a dynamically loaded webpage
+## the long time.sleep is in place so you can scroll down and load the page contents
+### Use with caution as scrapping data is againt most policies.
+
+
+# code to convert the youtube shorts page link into a text file 
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+
+driver.get("https://www.youtube.com/...")   #### paste your required link
+
+
+time.sleep(25)
+html_content = driver.page_source
+
+
+# Specify the path where you want to save the file
+file_path = '/Users/p/Desktop...'  #### Change this to your desired path
+
+with open(file_path, 'w', encoding='utf-8') as file:
+    file.write(html_content)
+print(f'HTML content saved to {file_path}')
+driver.quit()
