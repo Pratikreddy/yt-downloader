@@ -1,0 +1,32 @@
+# this code uses the pytube library in python to automate the video downloading process. 
+#keeo in mind the age restricted video error "https://github.com/pytube/pytube/issues/1712"
+
+#script to download all URL's from excel and log the errors into a dffrent excel.
+# Path to the Excel file
+excel_path = "/Users/p/Desktop/.../x.xlsx"
+VIDEO_SAVE_DIRECTORY = "/Users/p/Desktop/..."
+failed_downloads = pd.DataFrame(columns=['URL', 'Reason'])
+
+def download(video_url):
+    try:
+        video = YouTube(video_url)
+        video_stream = video.streams.get_highest_resolution()
+        video_stream.download(VIDEO_SAVE_DIRECTORY)
+        print(f"Video downloaded successfully: {video.title}")
+    except Exception as e:
+        print(f"Failed to download video: {e}")
+        return str(e)
+    
+df = pd.read_excel(excel_path)
+
+for url in df['URL']:
+    error_message = download(url)  
+    if error_message:  
+        new_row = pd.DataFrame([[url, error_message]], columns=['URL', 'Reason'])
+        failed_downloads = pd.concat([failed_downloads, new_row], ignore_index=True)
+
+# Save the failed downloads to a new Excel file
+failed_downloads_path = "/Users/p/Desktop/YT/.../x_fails.xlsx"
+failed_downloads.to_excel(failed_downloads_path, index=False)
+
+print(f"Failed downloads logged to {failed_downloads_path}")
