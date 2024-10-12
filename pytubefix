@@ -1,0 +1,23 @@
+from pytubefix import YouTube
+from tqdm import tqdm
+
+# Callback function to track progress
+def show_progress_bar(stream, chunk, bytes_remaining):
+    total_size = stream.filesize
+    bytes_downloaded = total_size - bytes_remaining
+    percentage_of_completion = bytes_downloaded / total_size * 100
+    tqdm.write(f"Downloaded {percentage_of_completion:.2f}%")
+
+# The URL of the YouTube video
+video_url = ""
+
+# Create a YouTube object and pass the progress bar callback
+yt = YouTube(video_url, on_progress_callback=show_progress_bar)
+
+# Get the highest resolution stream available
+video_stream = yt.streams.get_highest_resolution()
+
+# Download the video
+video_stream.download()
+
+print("Download complete!")
